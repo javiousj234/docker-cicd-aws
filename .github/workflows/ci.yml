@@ -35,11 +35,6 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
-      - name: Inspect GitHub OIDC claims
-        uses: github/actions-oidc-debugger@main
-        with:
-          audience: sts.amazonaws.com
-          
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6.3.0
         with:
@@ -57,3 +52,18 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ecs-task-definition.json
+          container-name: docker-cicd-app
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: docker-cicd-service
+          cluster: docker-cicd-cluster
+          wait-for-service-stability: true

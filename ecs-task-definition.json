@@ -1,0 +1,46 @@
+{
+  "family": "docker-cicd-task",
+  "containerDefinitions": [
+    {
+      "name": "docker-cicd-app",
+      "image": "056449378646.dkr.ecr.us-east-1.amazonaws.com/docker-cicd-app:c5d57da458ce7140c540853365510d105e6a372e",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp",
+          "name": "docker-cicd-app-8000-tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "essential": true,
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/docker-cicd-task",
+          "awslogs-create-group": "true",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "systemControls": []
+    }
+  ],
+  "executionRoleArn": "arn:aws:iam::056449378646:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "volumes": [],
+  "placementConstraints": [],
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512"
+}
