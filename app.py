@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     return jsonify(
-        message="Docker CI/CD project - version 3",
+        message="Docker CI/CD project - version 4",
         status="running"
     )
 
