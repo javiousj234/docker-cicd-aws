@@ -64,6 +64,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: docker-cicd-service
+          service: docker-cicd-app-service
           cluster: docker-cicd-cluster
           wait-for-service-stability: true
